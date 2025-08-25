@@ -1,20 +1,26 @@
-// server.js
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 
-const app = express(); // <--- you forgot this line
+import userRoutes from "./routes/users.js";
+import carRoutes from "./routes/cars.js";
+import bookingRoutes from "./routes/bookings.js";
+import paymentRoutes from "./routes/payments.js";
 
-// Middleware
+dotenv.config();
+const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// Example route
-app.get("/", (req, res) => {
-  res.send("Server is running...");
-});
+// Routes
+app.use("/api/users", userRoutes);
+app.use("/api/cars", carRoutes);
+app.use("/api/bookings", bookingRoutes);
+app.use("/api/payments", paymentRoutes);
 
-// Start server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚗 Car Rental Backend running on port ${PORT}`);
 });
