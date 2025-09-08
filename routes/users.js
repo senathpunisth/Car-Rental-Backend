@@ -1,26 +1,28 @@
+// routes/users.js - Updated with all password reset functionality
 import express from "express";
-import pool from "../db.js";
+import db from "../config/db.js"; 
+import { 
+  registerUser, 
+  loginUser, 
+  getUserProfile,
+  forgotPassword,
+  verifyResetToken,
+  resetPassword,
+  changePassword
+} from "../controllers/userController.js";
+import { authenticateToken } from "../middleware/auth.js"; // Your auth middleware (if you have one)
 
-const router = express.Router();
+const user = express.Router();
 
-// Register user
-router.post("/register", async (req, res) => {
-  try {
-    const { full_name, email, phone, password_hash } = req.body;
-    const [result] = await pool.query(
-      "INSERT INTO Users (full_name, email, phone, password_hash) VALUES (?, ?, ?, ?)",
-      [full_name, email, phone, password_hash]
-    );
-    res.json({ success: true, user_id: result.insertId });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Existing routes
+user.post("/register", registerUser);
+user.post("/login", loginUser);
+user.get("/profile", authenticateToken, getUserProfile);
 
-// Get all users
-router.get("/", async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM Users");
-  res.json(rows);
-});
+// New password reset routes
+user.post("/forgot-password", forgotPassword);
+user.get("/verify-reset-token/:token", verifyResetToken);
+user.post("/reset-password", resetPassword);
+user.post("/change-password", authenticateToken, changePassword);
 
-export default router;
+export default user;
