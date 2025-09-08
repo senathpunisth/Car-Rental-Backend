@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import db from '../config/database.js'; // You'll need to set up your MySQL connection
+=======
+import db from '../config/db.js';
+>>>>>>> Stashed changes
 
 class User {
     // Create a new user
@@ -64,6 +68,65 @@ class User {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    // Find user by reset token
+    static async findByResetToken(resetToken) {
+        const connection = await db.getConnection();
+        try {
+            const [rows] = await connection.execute(
+                'SELECT * FROM users WHERE reset_token = ? AND reset_token_expiry > NOW()',
+                [resetToken]
+            );
+            return rows[0] || null;
+        } finally {
+            connection.release();
+        }
+    }
+
+    // Save reset token for password reset
+    static async saveResetToken(userId, resetToken, expiryDate) {
+        const connection = await db.getConnection();
+        try {
+            const [result] = await connection.execute(
+                `UPDATE users SET reset_token = ?, reset_token_expiry = ? WHERE user_id = ?`,
+                [resetToken, expiryDate, userId]
+            );
+            return result.affectedRows;
+        } finally {
+            connection.release();
+        }
+    }
+
+    // Reset password and clear reset token
+    static async resetPassword(userId, newHashedPassword) {
+        const connection = await db.getConnection();
+        try {
+            const [result] = await connection.execute(
+                `UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expiry = NULL WHERE user_id = ?`,
+                [newHashedPassword, userId]
+            );
+            return result.affectedRows;
+        } finally {
+            connection.release();
+        }
+    }
+
+    // Clear expired reset tokens (cleanup function)
+    static async clearExpiredResetTokens() {
+        const connection = await db.getConnection();
+        try {
+            const [result] = await connection.execute(
+                `UPDATE users SET reset_token = NULL, reset_token_expiry = NULL 
+                 WHERE reset_token_expiry IS NOT NULL AND reset_token_expiry < NOW()`
+            );
+            return result.affectedRows;
+        } finally {
+            connection.release();
+        }
+    }
+
+>>>>>>> Stashed changes
     // Update user
     static async update(user_id, updateData) {
         const connection = await db.getConnection();
