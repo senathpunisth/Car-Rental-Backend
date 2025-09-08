@@ -2,11 +2,7 @@
   "name": "car-rental-backend",
   "version": "1.0.0",
   "main": "db.js",
-<<<<<<< Updated upstream
-  "type":"module",
-=======
   "type": "module",
->>>>>>> Stashed changes
   "scripts": {
     "serve": "nodemon server.js",
     "start": "node server.js"

@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-import db from '../config/database.js'; // You'll need to set up your MySQL connection
-=======
 import db from '../config/db.js';
->>>>>>> Stashed changes
 
 class User {
     // Create a new user
@@ -68,8 +64,6 @@ class User {
         }
     }
 
-<<<<<<< Updated upstream
-=======
     // Find user by reset token
     static async findByResetToken(resetToken) {
         const connection = await db.getConnection();
@@ -126,7 +120,6 @@ class User {
         }
     }
 
->>>>>>> Stashed changes
     // Update user
     static async update(user_id, updateData) {
         const connection = await db.getConnection();
